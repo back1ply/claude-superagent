@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "superagent",
-      "description": "DeepSeek's dsh-superagent workflow for Claude Code: router, per-ticket workers in git worktrees, and a host CLI that enforces the original's GitHub rules.",
+      "description": "DeepSeek's dsh-superagent workflow for Claude Code, local-first: give work with /superagent:ask or from GitHub, GitLab and Bitbucket comments. A router that only routes, one worker per ticket in its own git worktree, and a host CLI that enforces the original's rules.",
       "author": {
         "name": "back1ply",
         "url": "https://github.com/back1ply"
@@ -17,7 +17,15 @@
       "homepage": "https://github.com/back1ply/claude-superagent",
       "repository": "https://github.com/back1ply/claude-superagent.git",
       "license": "MIT",
-      "keywords": ["superagent", "github", "agents", "workflow", "deepseek"],
+      "keywords": [
+        "superagent",
+        "workflow",
+        "local",
+        "github",
+        "gitlab",
+        "bitbucket",
+        "deepseek"
+      ],
       "category": "development",
       "source": "./"
     }

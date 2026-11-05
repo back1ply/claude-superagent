@@ -1,6 +1,6 @@
 ---
 name: run
-description: Run one Superagent pass on this repository - poll GitHub, route new requests with the router agent, start or resume ticket workers, and deliver their results and questions. Use when the user says "run superagent", "check for requests", or with /loop for continuous running.
+description: Run one Superagent pass on this repository - poll local requests and every configured forge, route new requests with the router agent, start or resume ticket workers, and deliver their results and questions. Use when the user says "run superagent", "check for requests", or with /loop for continuous running.
 allowed-tools: Bash(superagent *) Agent(superagent:router) Agent(superagent:worker)
 ---
 
@@ -12,7 +12,7 @@ Take as little human attention as possible, and give as much value as possible: 
 
 ## 1. Poll
 
-Run `superagent poll`. It delivers new comments, reviews and CI to the tickets that follow their threads, ends tickets whose PR merged or closed, and writes candidate cards for everything else that may be new work.
+Run `superagent poll`. If it returns `errors`, a source could not be read (a forge down, an expired token): tell the user which, in one line each, and carry on; the others were read and the failed one is retried from where it stopped next pass. It reads every source (local requests and request files, and each configured forge), delivers new messages, reviews and CI to the tickets that follow their threads, ends tickets whose PR/MR merged or closed or whose local branch was merged, and writes candidate cards for everything else that may be new work.
 
 ## 2. Route
 
@@ -49,9 +49,10 @@ Rules for every reply:
 - Use the worker report's facts; for missing technical facts, ask the worker, not your own investigation.
 - 100 words is a hard ceiling, not a target, and the host refuses longer messages. Do not evade it with long compound sentences, lists or several messages.
 - A PR merge or close (`notices`) needs no second message: the PR already shows it. State that an issue is fixed only if the worker report supports it.
-- A `follow_ups` entry is a person's message that already reached the listed workers; they decide it. Act on it only to stop work when the person asks, through a router decision. Never forward it a second time.
-- `dry-run` results mean `send` is off in `.superagent/config.json`: the message went to `.superagent/outbox.jsonl` only.
+- A `follow_ups` entry is a person's message that already reached the listed workers; they decide it. When one comes from a person who may instruct the agent, poll also writes it as a `follow_up` card, and the router may stop the ticket with it. Never forward it a second time.
+- `dry-run` results mean `send` is off in `.superagent/config.json`: the forge message went to `.superagent/outbox.jsonl` only.
+- Replies to local requests are written to the local thread; the user reads them with `/superagent:status`. For a local ticket delivered as a branch, the result names the branch and how to try it, such as `git diff main...superagent/<name>`.
 
 ## 5. End
 
-End the turn when nothing is left to do; workers' completions arrive by themselves. Report to the user in two or three lines: new tickets, messages sent, and anything waiting for them. For continuous running, the user can run `/loop 5m /superagent:run`.
+End the turn when nothing is left to do; workers' completions arrive by themselves. Report to the user in two or three lines: new tickets, messages sent, and anything waiting for them. Show new local replies verbatim with `superagent messages`. For continuous running, the user can run `/loop 5m /superagent:run`.
