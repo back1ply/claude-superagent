@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-superagent",
+  "description": "DeepSeek's dsh-superagent workflow, ported to a Claude Code plugin",
+  "owner": {
+    "name": "back1ply",
+    "url": "https://github.com/back1ply"
+  },
+  "plugins": [
+    {
+      "name": "superagent",
+      "description": "DeepSeek's dsh-superagent workflow for Claude Code: router, per-ticket workers in git worktrees, and a host CLI that enforces the original's GitHub rules.",
+      "author": {
+        "name": "back1ply",
+        "url": "https://github.com/back1ply"
+      },
+      "homepage": "https://github.com/back1ply/claude-superagent",
+      "repository": "https://github.com/back1ply/claude-superagent.git",
+      "license": "MIT",
+      "keywords": ["superagent", "github", "agents", "workflow", "deepseek"],
+      "category": "development",
+      "source": "./"
+    }
+  ]
+}

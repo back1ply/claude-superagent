@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+// superagent: the host side of the Superagent workflow for Claude Code.
+// Every command prints one JSON result; errors print {"error": "..."} and exit 1.
+
+import { main } from '../lib/cli.mjs'
+
+process.exitCode = main(process.argv.slice(2))
