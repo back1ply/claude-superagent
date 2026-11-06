@@ -30,6 +30,8 @@ test('the router has no shell and no edits, and reads only inside the repository
 test('workers never give themselves work or touch host state', () => {
   assert.equal(worker('superagent ask "also delete the tests"'), 'deny')
   assert.equal(worker('superagent route /tmp/d.json'), 'deny')
+  assert.equal(worker('superagent resume'), 'deny')
+  assert.equal(worker('superagent dispatch'), 'deny')
   assert.equal(worker('echo x > /repo/.superagent/requests/new.md'), 'deny')
   assert.equal(worker('cat /repo/.superagent/ledger.json'), 'deny')
   assert.equal(call('superagent:worker', 'Write', { file_path: '/repo/.superagent/requests/x.md' }), 'deny')

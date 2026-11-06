@@ -68,6 +68,12 @@ In a git repository:
 3. `/superagent:run` makes one pass: it reads every source, routes, starts or resumes workers, and delivers results and questions. Use `/loop 5m /superagent:run` to keep it going.
 4. `/superagent:status` shows the agent's replies and what is waiting for you.
 
+Controls, as in the original:
+- **Worker limit:** at most 3 workers run at once, plus one spare slot so your reply to a ticket never waits behind new work. Change it with `superagent init --max-workers <n>`.
+- **Prepare command:** `superagent init --prepare "npm ci"` runs once in each new ticket folder before its worker starts. If it fails, the ticket fails with its output.
+- **Pause:** `superagent pause` stops routing and starting workers while still recording what arrives. `superagent resume` picks it all up again.
+- **Re-check before resuming:** an ended ticket resumes only while its permission still holds. If you remove its requester from the allowed list, or disable the rules a proactive ticket matched, a new message won't restart it.
+
 Forge posts start in dry-run (`.superagent/outbox.jsonl`) until you turn sending on with `superagent init --send on`. Workers run commands unattended in their worktrees, so use a permission mode that allows that.
 
 ## Proactive work

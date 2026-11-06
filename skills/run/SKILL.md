@@ -12,6 +12,8 @@ Take as little human attention as possible, and give as much value as possible: 
 
 ## 1. Poll
 
+If poll returns `paused: true`, Superagent is paused: it still recorded what arrived (`deferred` candidates are kept), but do not route, start workers or deliver. Tell the user it is paused and that `superagent resume` starts it again, then end the pass.
+
 Run `superagent poll`. If it returns `errors`, a source could not be read (a forge down, an expired token): tell the user which, in one line each, and carry on; the others were read and the failed one is retried from where it stopped next pass. It reads every source (local requests and request files, and each configured forge), delivers new messages, reviews and CI to the tickets that follow their threads, ends tickets whose PR/MR merged or closed or whose local branch was merged, and writes candidate cards for everything else that may be new work.
 
 ## 2. Route
@@ -28,11 +30,12 @@ Copy the JSON block it returns, unchanged, to `.superagent/inbox/decisions-<same
 
 ## 3. Start or resume workers
 
-Run `superagent tickets` and start the `superagent:worker` agent in the background, with the prompt `Ticket <id>.`, for each ticket that has no worker running in this session and either:
-- has `assignment: pending` (new, attached, woken by a person, or with inputs left after its last report), or
-- has `assignment: running` but no worker of this session: its earlier session ended mid-work, so resume it. On the first pass of a session, this is every `running` ticket.
+Run `superagent dispatch`, adding `--session-start` on the first pass of this Claude session. It keeps within the worker limit (`maxWorkers`, with one spare slot so a person's message never waits behind new work) and claims a slot for each ticket it returns:
+- `start`: start the `superagent:worker` agent in the background for each, with the prompt `Ticket <id>.`
+- `resume` (session start only): tickets an earlier session left mid-work; start a worker for each the same way.
+- `queued`: waiting for a free slot. They start on a later pass, once a worker finishes.
 
-A worker that is already running picks up new inputs through its inbox, so do not start a second one for the same ticket.
+Start exactly one worker per returned ticket. A worker that is already running picks up new inputs through its inbox, so never start a second one for the same ticket.
 
 ## 4. Deliver
 

@@ -23,11 +23,13 @@ Ask one short question at a time, show the full plan once, then apply it.
 
    Names are free: two GitHub sources can be `github` and `github-mirror`.
 4. **Where local requests are delivered.** By default as a local branch. If the user prefers PRs for them too: `superagent init --deliver <forge source name>`.
-5. **Sending.** Forge posts start in dry-run: acknowledgements and replies go to `.superagent/outbox.jsonl` instead of the forge. `superagent init --send on` once what the agent would have said looks right. Local replies are never held back.
+5. **Workers.** At most `maxWorkers` run at once (default 3; `superagent init --max-workers <n>`). If each ticket folder needs setup before work, such as installing dependencies, set a prepare command: `superagent init --prepare "npm ci"`. It runs once per new ticket folder, with `SUPERAGENT_TICKET`, `SUPERAGENT_DIR`, `SUPERAGENT_BRANCH` and `SUPERAGENT_BASE` set; if it fails, the ticket fails with its output.
+6. **Sending.** Forge posts start in dry-run: acknowledgements and replies go to `.superagent/outbox.jsonl` instead of the forge. `superagent init --send on` once what the agent would have said looks right. Local replies are never held back.
 
 Show the plan, apply it, and then tell the user in a few lines:
 - `/superagent:ask <request>` for local work; `/superagent:run` for one pass, or `/loop 5m /superagent:run` while this session is open; `/superagent:status` for what needs them.
 - Workers run commands unattended in `.superagent/work/<name>`, so use a permission mode that allows that (auto mode, or allow rules for git, the forge CLIs and the project's test commands).
 - With no forge configured, workers cannot push or post anywhere.
+- `superagent pause` stops routing and starting workers (arrivals are still recorded); `superagent resume` starts again.
 - Proactive work (`policy.rules` in `config.json`, `policy.mode` `observe` or `auto`) stays off until they add rules. Observe mode only records what the agent would have done.
 - Team sections can be overridden per repository in `.superagent/team/communication.md`, `scope.md` and `delivery.md`.

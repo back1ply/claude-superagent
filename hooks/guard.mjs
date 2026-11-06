@@ -22,7 +22,7 @@ const WORKER_FORBIDDEN = [
   [/\bglab\s+mr\s+(merge|approve)\b|\bglab\s+api\b[^\n]*\/merge_requests\/\d+\/(merge|approve)\b/, MERGES_ARE_HUMAN],
   [/\b(gh|glab)\s+issue\s+close\b/, 'Workers never close issues.'],
   [/api\.bitbucket\.org|BITBUCKET_API_TOKEN|BITBUCKET_EMAIL/, 'Call Bitbucket only through `superagent bitbucket-api`; never read its credentials.'],
-  [/\bsuperagent\s+(ask|init|source|route|reply|poll|request-status|messages)\b/, 'Workers never route, reply for the orchestrator or give themselves work.'],
+  [/\bsuperagent\s+(ask|init|source|route|reply|poll|request-status|messages|dispatch|pause|resume)\b/, 'Workers never route, reply for the orchestrator or give themselves work.'],
 ]
 
 // The state outside ticket worktrees belongs to the host.
